@@ -2,6 +2,7 @@
 
 import { Product, ShoppingList } from '@/types/shopping-list'
 import { createContext, useContext, useState, useCallback } from 'react'
+import { useShoppingList } from './shopping-list-context'
 
 interface ListContextType {
   list: ShoppingList | null
@@ -20,7 +21,8 @@ export function ListProvider({
   children: React.ReactNode
   initialList: ShoppingList
 }) {
-  const [list, setList] = useState<ShoppingList>(initialList)
+  const [list, setList] = useState<ShoppingList>(initialList);
+  const { updateFullList } = useShoppingList();
 
   const addProduct = useCallback((product: Omit<Product, 'id' | 'total'>) => {
     const newProduct = {
@@ -29,40 +31,58 @@ export function ListProvider({
       total: product.price * product.quantidade
     }
 
-    setList(prev => ({
-      ...prev,
-      productsList: [...prev.productsList, newProduct],
-      total: prev.total + newProduct.total
-    }))
-  }, [])
+    const updatedList = {
+      ...list,
+      productsList: [...list.productsList, newProduct],
+      total: list.total + newProduct.total
+    };
+
+    setList(updatedList);
+    updateFullList(updatedList);
+  }, [list, updateFullList]);
 
   const removeProduct = useCallback((productId: string) => {
     setList(prev => {
       const product = prev.productsList.find(p => p.id === productId)
       if (!product) return prev
 
-      return {
+      const updatedList = {
         ...prev,
         productsList: prev.productsList.filter(p => p.id !== productId),
         total: prev.total - product.total
-      }
+      };
+
+      updateFullList(updatedList);
+      return updatedList;
     })
-  }, [])
+  }, [updateFullList]);
 
   const clearList = useCallback(() => {
-    setList(prev => ({
-      ...prev,
-      productsList: [],
-      total: 0
-    }))
-  }, [])
+    setList(prev => {
+      const updatedList = {
+        ...prev,
+        productsList: [],
+        total: 0
+      };
+
+      updateFullList(updatedList);
+      return updatedList;
+    })
+  }, [updateFullList]);
 
   const updateList = useCallback((newList: ShoppingList) => {
-    setList(newList)
-  }, [])
+    setList(newList);
+    updateFullList(newList);
+  }, [updateFullList]);
 
   return (
-    <ListContext.Provider value={{ list, addProduct, removeProduct, clearList, updateList }}>
+    <ListContext.Provider value={{ 
+      list, 
+      addProduct, 
+      removeProduct, 
+      clearList, 
+      updateList 
+    }}>
       {children}
     </ListContext.Provider>
   )

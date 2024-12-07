@@ -32,8 +32,12 @@ export function ListFooter() {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4">
       <div className="container mx-auto px-4 flex justify-between items-center">
+
         <div className={`text-lg font-semibold ${getColorByTotal()}`}>
-          Total: R$ {list.total.toFixed(2)}
+          <span className="text-sm text-muted-foreground">
+            Itens: {list.productsList.reduce((acc, product) => acc + product.quantidade, 0)}
+          </span><br />
+          Total: {Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(list.total)}
         </div>
 
         <AlertDialog>

@@ -8,9 +8,10 @@ import { Button } from "@/components/ui/button";
 import { ShoppingListHeader } from "@/components/shopping-list/header";
 import { Sidebar } from "@/components/shopping-list/sidebar";
 import { ShoppingListProvider } from "@/contexts/shopping-list-context";
-import { AISettingsProvider } from "@/contexts/ai-settings-context";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
+import { AIProviderProvider } from "@/contexts/ai-provider-context";
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,12 +32,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen bg-gray-50">
-            <AISettingsProvider>
+          <div className="min-h-screen bg-background">
+            <AIProviderProvider>
               <ShoppingListProvider>
-                <div className="min-h-screen bg-gray-50">
+                <div className="min-h-screen bg-background">
                   <ShoppingListHeader>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <ModeToggle/>
                       <Button
                         variant="ghost"
@@ -52,8 +53,14 @@ export default function RootLayout({
                   {children}
                 </div>
               </ShoppingListProvider>
-            </AISettingsProvider>
+            </AIProviderProvider>
           </div>
+          <Toaster 
+            position="top-right"
+            richColors 
+            expand={true}  // Faz os toasts expandirem verticalmente
+            offset={8}     // Espaçamento entre os toasts
+          />
         </ThemeProvider>
       </body>
     </html>

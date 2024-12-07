@@ -17,18 +17,18 @@ export function AISettingsProvider({ children }: { children: ReactNode }) {
   const [aiProvider, setAiProvider] = useState<string>('Groq Ai');
   const [apiKey, setApiKey] = useState<string>('');
 
-  useEffect(() => {
-    const storedSettings = localStorage.getItem(STORAGE_KEY);
-    if (storedSettings) {
-      const { aiProvider: savedProvider, apiKey: savedKey } = JSON.parse(storedSettings);
-      setAiProvider(savedProvider);
-      setApiKey(savedKey);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedSettings = localStorage.getItem(STORAGE_KEY);
+  //   if (storedSettings) {
+  //     const { aiProvider: savedProvider, apiKey: savedKey } = JSON.parse(storedSettings);
+  //     setAiProvider(savedProvider);
+  //     setApiKey(savedKey);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ aiProvider, apiKey }));
-  }, [aiProvider, apiKey]);
+  // useEffect(() => {
+  //   localStorage.setItem(STORAGE_KEY, JSON.stringify({ aiProvider, apiKey }));
+  // }, [aiProvider, apiKey]);
 
   return (
     <AISettingsContext.Provider value={{ aiProvider, apiKey, setAiProvider, setApiKey }}>

@@ -1,17 +1,52 @@
 "use client";
 
-import { useAISettings } from '@/contexts/ai-settings-context';
+// import { useAISettings } from '@/contexts/ai-settings-context';
+import { useAIProvider } from '@/contexts/ai-provider-context';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useEffect, useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function SettingsPage() {
-  const { aiProvider, setAiProvider, apiKey, setApiKey } = useAISettings();
+  // const { aiProvider, setAiProvider, apiKey, setApiKey } = useAISettings();
+  const {
+    provider,
+    setProvider,
+    globalApiKey,
+    setGlobalApiKey,
+    groqApiKey,
+    setGroqApiKey,
+    openaiApiKey,
+    setOpenaiApiKey,
+    aiProvider, 
+    setAiProvider, 
+    apiKey, 
+    setApiKey
+  } = useAIProvider();
+
+  const [showGlobalKey, setShowGlobalKey] = useState(false);
+  const [showGroqKey, setShowGroqKey] = useState(false);
+  const [showOpenAIKey, setShowOpenAIKey] = useState(false);
+
+  // Carrega os dados do contexto quando a página é montada
+  useEffect(() => {
+    const providerValue = provider === 'groq' ? 'Groq Ai' : 'OpenAI';
+    setAiProvider(providerValue);
+    setApiKey(globalApiKey);
+  }, [provider, globalApiKey, setAiProvider, setApiKey]);
 
   const handleSave = () => {
-    // Aqui você pode adicionar lógica adicional se necessário
     console.log('Configurações salvas:', { aiProvider, apiKey });
+
+    const providerValue = aiProvider === 'Groq Ai' ? 'groq' : 'openai';
+    setProvider(providerValue);
+    setGlobalApiKey(apiKey);
+    toast.success('Configurações salvas com sucesso', {
+      duration: 2000,
+    });
   };
 
   return (
@@ -19,17 +54,20 @@ export default function SettingsPage() {
       <div className="mx-auto p-6">
         <h1 className="text-2xl font-bold">Configurações</h1>
         <p className="text-sm text-muted-foreground">
-          Mantenha seus dados pessoais atualizados.
+          Mantenha suas configurações e credenciais atualizadas.
         </p>
       </div>
       <div className="container mx-auto p-2">
-        <div className=" mx-auto bg-white p-6 rounded-lg shadow-sm">
+        <div className="mx-auto bg-card p-6 rounded-lg shadow-sm">
           <div className="space-y-6">
             <div className="space-y-2">
               <Label>IA Provider</Label>
               <RadioGroup
                 value={aiProvider}
-                onValueChange={setAiProvider}
+                onValueChange={(value) => {
+                  setAiProvider(value);
+                  setProvider(value === 'Groq Ai' ? 'groq' : 'openai');
+                }}
                 className="gap-4"
               >
                 <div className="flex items-center space-x-2">
@@ -43,15 +81,74 @@ export default function SettingsPage() {
               </RadioGroup>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="apiKey">API Key</Label>
-              <Input
-                id="apiKey"
-                type="text"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Digite sua API Key"
-              />
+            <div className="space-y-4 pt-4 border-t">
+              <h2 className="text-lg font-semibold">Environments</h2>
+
+              <div className="space-y-2">
+                <Label htmlFor="globalApiKey">API Key Global</Label>
+                <div className="relative">
+                  <Input
+                    id="globalApiKey"
+                    type={showGlobalKey ? "text" : "password"}
+                    value={apiKey}
+                    onChange={(e) => {
+                      setApiKey(e.target.value);
+                      setGlobalApiKey(e.target.value);
+                    }}
+                    placeholder="Digite sua API Key Global"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-1/2 -translate-y-1/2"
+                    onClick={() => setShowGlobalKey(!showGlobalKey)}
+                  >
+                    {showGlobalKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="groqApiKey">Groq API Key</Label>
+                <div className="relative">
+                  <Input
+                    id="groqApiKey"
+                    type={showGroqKey ? "text" : "password"}
+                    value={groqApiKey}
+                    onChange={(e) => setGroqApiKey(e.target.value)}
+                    placeholder="Digite sua Groq API Key"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-1/2 -translate-y-1/2"
+                    onClick={() => setShowGroqKey(!showGroqKey)}
+                  >
+                    {showGroqKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="openaiApiKey">OpenAI API Key</Label>
+                <div className="relative">
+                  <Input
+                    id="openaiApiKey"
+                    type={showOpenAIKey ? "text" : "password"}
+                    value={openaiApiKey}
+                    onChange={(e) => setOpenaiApiKey(e.target.value)}
+                    placeholder="Digite sua OpenAI API Key"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-1/2 -translate-y-1/2"
+                    onClick={() => setShowOpenAIKey(!showOpenAIKey)}
+                  >
+                    {showOpenAIKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
+              </div>
             </div>
 
             <Button

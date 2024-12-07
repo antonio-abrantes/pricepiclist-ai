@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export function ShoppingListHeader({ children }: { children: React.ReactNode }) {
   return (
-    <header className="sticky top-0 z-50 border-b bg-white">
+    <header className="sticky top-0 z-50 border-b bg-background">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
 

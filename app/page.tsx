@@ -18,7 +18,8 @@ export default function Home() {
             id={list.id}
             name={list.name}
             maxValue={list.maxValue}
-            createdAt={list.createdAt}
+            createdAt={list.createdAt ?? new Date()}
+            total={list.total ?? 0}
           />
         ))}
       </div>

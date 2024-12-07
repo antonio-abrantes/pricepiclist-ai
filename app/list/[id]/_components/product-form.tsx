@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -16,12 +16,18 @@ interface ProductFormProps {
   isOpen: boolean
   onClose: () => void
   onSubmit: (product: { productName: string; price: number; quantidade: number }) => void
+  priceObject: { name: string; price: string }
 }
 
-export function ProductForm({ isOpen, onClose, onSubmit }: ProductFormProps) {
-  const [productName, setProductName] = useState('Produto Exemplo')
-  const [price, setPrice] = useState('10.00')
-  const [quantidade, setQuantidade] = useState('1')
+export function ProductForm({ isOpen, onClose, onSubmit, priceObject }: ProductFormProps) {
+  const [productName, setProductName] = useState(priceObject.name)
+  const [price, setPrice] = useState(priceObject.price)
+  const [quantidade, setQuantidade] = useState(1)
+
+  useEffect(() => {
+    setProductName(priceObject.name)
+    setPrice(priceObject.price)
+  }, [priceObject])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,6 +37,7 @@ export function ProductForm({ isOpen, onClose, onSubmit }: ProductFormProps) {
       quantidade: Number(quantidade)
     })
     onClose()
+    setQuantidade(1)
   }
 
   return (
@@ -65,7 +72,7 @@ export function ProductForm({ isOpen, onClose, onSubmit }: ProductFormProps) {
                 id="quantidade"
                 type="number"
                 value={quantidade}
-                onChange={(e) => setQuantidade(e.target.value)}
+                onChange={(e) => setQuantidade(Number(e.target.value))}
               />
             </div>
           </div>
