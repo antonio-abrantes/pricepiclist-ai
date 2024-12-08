@@ -6,6 +6,8 @@ import { LogOut } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
 import { Label } from "../ui/label";
+import { useProfile } from "@/contexts/profile-context";
+import { useEffect } from "react";
 
 export function Sidebar({
   open,
@@ -15,19 +17,25 @@ export function Sidebar({
   onClose: () => void;
 }) {
 
+  const { profile } = useProfile();
+
   const handleItemClick = () => {
     onClose();
   };
+
+  useEffect(() => {
+    console.log(profile);
+  }, [profile]);
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent side="left" className="flex flex-col">
         <div className="flex flex-col items-center py-8">
           <Avatar className="h-20 w-20">
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage src={profile.avatarUrl ?? 'https://github.com/shadcn.png'} />
             <AvatarFallback>Toni</AvatarFallback>
           </Avatar>
-          <Label className="text-lg font-bold mt-1">Toni</Label>
+          <Label className="text-lg font-bold mt-1">{profile.name ?? 'Anônimo'}</Label>
         </div>
         <nav className="flex-1">
           <div className="flex flex-col gap-2 w-full">

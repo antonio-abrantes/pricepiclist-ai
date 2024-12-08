@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -16,42 +16,41 @@ import {
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { AvatarUpload } from './avatar-upload';
+import { Profile, useProfile } from '@/contexts/profile-context';
+import { toast } from 'sonner';
 
 const profileSchema = z.object({
-  name: z.string().min(1, 'Nome é obrigatório'),
+  name: z.string(),
   email: z.string().email('Email inválido'),
-  cpf: z.string().min(11, 'CPF inválido').max(14, 'CPF inválido'),
-  ddd: z.string().min(2, 'DDD inválido').max(2, 'DDD inválido'),
-  phone: z.string().min(8, 'Telefone inválido').max(9, 'Telefone inválido'),
-  avatarUrl: z.string().optional(),
-});
-
-type ProfileFormData = z.infer<typeof profileSchema>;
-
-const mockUser = {
-  name: 'Jamacy Felix Balsas',
-  email: 'jamacybalsas@gmail.com',
-  cpf: '384.171.077-59',
-  ddd: '83',
-  phone: '99930-3033',
-  avatarUrl: 'https://picsum.photos/200',
-};
+  cpf: z.string(),
+  ddd: z.string(),
+  phone: z.string(),
+  avatarUrl: z.string(),
+}).partial();
 
 export function ProfileForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const { profile, updateProfile } = useProfile();
 
-  const form = useForm<ProfileFormData>({
+  const form = useForm<Profile>({
     resolver: zodResolver(profileSchema),
-    defaultValues: mockUser,
+    defaultValues: profile
   });
 
-  const onSubmit = async (data: ProfileFormData) => {
+  useEffect(() => {
+    if (profile) {
+      form.reset(profile);
+    }
+  }, [form, profile]);
+
+  const onSubmit = async (data: Profile) => {
     try {
       setIsLoading(true);
-      // Implement API call here
-      console.log('Form submitted:', data);
+      updateProfile(data);
+      toast.success('Perfil atualizado com sucesso!');
     } catch (error) {
       console.error('Error submitting form:', error);
+      toast.error('Erro ao atualizar perfil');
     } finally {
       setIsLoading(false);
     }
@@ -64,8 +63,11 @@ export function ProfileForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="flex justify-center mb-6">
               <AvatarUpload
-                currentImageUrl={mockUser.avatarUrl}
-                onImageUpload={(url) => form.setValue('avatarUrl', url)}
+                currentImageUrl={profile.avatarUrl}
+                onImageUpload={(url) => {
+                  form.setValue('avatarUrl', url);
+                  updateProfile({ avatarUrl: url });
+                }}
               />
             </div>
 

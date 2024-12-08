@@ -12,6 +12,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
 import { AIProviderProvider } from "@/contexts/ai-provider-context";
 import { Toaster } from 'sonner';
+import { ProfileProvider } from '@/contexts/profile-context';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,7 +33,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen bg-background">
+          <ProfileProvider>
             <AIProviderProvider>
               <ShoppingListProvider>
                 <div className="min-h-screen bg-background">
@@ -54,7 +55,7 @@ export default function RootLayout({
                 </div>
               </ShoppingListProvider>
             </AIProviderProvider>
-          </div>
+          </ProfileProvider>
           <Toaster 
             position="top-right"
             richColors 

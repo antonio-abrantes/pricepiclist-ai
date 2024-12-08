@@ -37,11 +37,11 @@ export function AvatarUpload({ currentImageUrl, onImageUpload }: AvatarUploadPro
   const handleUpload = async () => {
     if (selectedFile) {
       try {
-        // Implement actual file upload logic here
-        // For now, we'll just simulate it
-        const fakeUploadedUrl = URL.createObjectURL(selectedFile);
-        onImageUpload(fakeUploadedUrl);
+        const uploadedUrl = URL.createObjectURL(selectedFile);
+        onImageUpload(uploadedUrl);
         setIsOpen(false);
+        setSelectedFile(null);
+        setPreviewUrl(null);
       } catch (error) {
         console.error('Error uploading file:', error);
       }
@@ -51,7 +51,7 @@ export function AvatarUpload({ currentImageUrl, onImageUpload }: AvatarUploadPro
   return (
     <div className="relative">
       <Avatar className="h-32 w-32">
-        <AvatarImage src={currentImageUrl} alt="Profile picture" />
+        <AvatarImage src={currentImageUrl ?? 'https://github.com/shadcn.png'} alt="Profile picture" />
         <AvatarFallback>JF</AvatarFallback>
       </Avatar>
       <Button
@@ -71,7 +71,7 @@ export function AvatarUpload({ currentImageUrl, onImageUpload }: AvatarUploadPro
           <div className="space-y-4">
             <div className="flex justify-center">
               <Avatar className="h-32 w-32">
-                <AvatarImage
+                <AvatarImage 
                   src={previewUrl || currentImageUrl}
                   alt="Preview"
                 />
