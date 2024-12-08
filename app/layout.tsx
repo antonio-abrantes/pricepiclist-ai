@@ -8,6 +8,7 @@ import { ShoppingListProvider } from "@/contexts/shopping-list-context";
 import { ProfileProvider } from "@/contexts/profile-context";
 import { Toaster } from "sonner";
 import { RootLayoutClient } from "./components/root-layout-client";
+import { PWAInstallProvider } from "@/contexts/pwa-install-context";
 
 const inter = Inter({ subsets: ["latin"] });
 const title = "PricePicList.AI";
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(url),
   title,
   description,
-  manifest: '/manifest.json',
+  manifest: "/manifest.json",
   icons: {
     icon: "/icon-512x512.png",
     shortcut: "/icon-192x192.png",
@@ -30,14 +31,15 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: "default",
     title: title,
   },
   formatDetection: {
     telephone: false,
   },
-  themeColor: '#000000',
-  viewport: 'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
+  themeColor: "#000000",
+  viewport:
+    "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
   openGraph: {
     images: [ogimage],
     title,
@@ -72,19 +74,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ProfileProvider>
-            <AIProviderProvider>
-              <ShoppingListProvider>
-                <RootLayoutClient>{children}</RootLayoutClient>
-              </ShoppingListProvider>
-            </AIProviderProvider>
-          </ProfileProvider>
-          <Toaster
-            position="top-right"
-            richColors
-            expand={true}
-            offset={8}
-          />
+          <PWAInstallProvider>
+            <ProfileProvider>
+              <AIProviderProvider>
+                <ShoppingListProvider>
+                  <RootLayoutClient>{children}</RootLayoutClient>
+                </ShoppingListProvider>
+              </AIProviderProvider>
+            </ProfileProvider>
+          </PWAInstallProvider>
+          <Toaster position="top-right" richColors expand={true} offset={8} />
         </ThemeProvider>
       </body>
     </html>
