@@ -47,6 +47,7 @@ export function ListActions() {
       setPriceObject(undefined);
       setMenuUrl(undefined);
       setIsCompressing(false);
+      toast.success("Imagem capturada com sucesso!");
     }
   }
 
