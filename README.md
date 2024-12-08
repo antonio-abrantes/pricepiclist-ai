@@ -36,7 +36,7 @@ A aplicação permite que o usuário:
 
 1. Clone o repositório:
 ```bash
-git clone https://github.com/antonio-abrantes/pricepiclist-ai.git
+git clone https://github.com/antonio-abrantes/pricepiclist.ai.git
 cd pricepiclist-ai
 ```
 2. Instale as dependências:
