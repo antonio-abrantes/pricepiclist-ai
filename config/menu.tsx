@@ -1,4 +1,4 @@
-import { Settings, User, LogOut } from "lucide-react";
+import { Settings, User, LogOut, Home } from "lucide-react";
 import { LucideIcon, Shield } from "lucide-react";
 
 
@@ -10,6 +10,11 @@ interface MenuItem {
 }
 
 export const menuItems: MenuItem[] = [
+  {
+    label: "Home",
+    icon: Home,
+    href: "/",
+  },
   {
     label: "Perfil",
     icon: User,

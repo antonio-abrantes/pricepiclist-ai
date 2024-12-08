@@ -7,7 +7,6 @@ import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
 import { Label } from "../ui/label";
 import { useProfile } from "@/contexts/profile-context";
-import { useEffect } from "react";
 
 export function Sidebar({
   open,

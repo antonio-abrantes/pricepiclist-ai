@@ -37,11 +37,15 @@ export function AvatarUpload({ currentImageUrl, onImageUpload }: AvatarUploadPro
   const handleUpload = async () => {
     if (selectedFile) {
       try {
-        const uploadedUrl = URL.createObjectURL(selectedFile);
-        onImageUpload(uploadedUrl);
-        setIsOpen(false);
-        setSelectedFile(null);
-        setPreviewUrl(null);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64String = reader.result as string;
+          onImageUpload(base64String);
+          setIsOpen(false);
+          setSelectedFile(null);
+          setPreviewUrl(null);
+        };
+        reader.readAsDataURL(selectedFile);
       } catch (error) {
         console.error('Error uploading file:', error);
       }

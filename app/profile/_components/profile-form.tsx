@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,21 +12,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { AvatarUpload } from './avatar-upload';
-import { Profile, useProfile } from '@/contexts/profile-context';
-import { toast } from 'sonner';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { AvatarUpload } from "./avatar-upload";
+import { Profile, useProfile } from "@/contexts/profile-context";
+import { toast } from "sonner";
 
-const profileSchema = z.object({
-  name: z.string(),
-  email: z.string().email('Email inválido'),
-  cpf: z.string(),
-  ddd: z.string(),
-  phone: z.string(),
-  avatarUrl: z.string(),
-}).partial();
+const profileSchema = z
+  .object({
+    name: z.string(),
+    email: z.string().email("Email inválido"),
+    cpf: z.string(),
+    ddd: z.string(),
+    phone: z.string(),
+    avatarUrl: z.string(),
+  })
+  .partial();
 
 export function ProfileForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +36,7 @@ export function ProfileForm() {
 
   const form = useForm<Profile>({
     resolver: zodResolver(profileSchema),
-    defaultValues: profile
+    defaultValues: profile,
   });
 
   useEffect(() => {
@@ -47,10 +49,10 @@ export function ProfileForm() {
     try {
       setIsLoading(true);
       updateProfile(data);
-      toast.success('Perfil atualizado com sucesso!');
+      toast.success("Perfil atualizado com sucesso!");
     } catch (error) {
-      console.error('Error submitting form:', error);
-      toast.error('Erro ao atualizar perfil');
+      console.error("Error submitting form:", error);
+      toast.error("Erro ao atualizar perfil");
     } finally {
       setIsLoading(false);
     }
@@ -59,18 +61,17 @@ export function ProfileForm() {
   return (
     <Card>
       <CardContent className="p-6">
+        <div className="flex justify-center mb-6">
+          <AvatarUpload
+            currentImageUrl={profile.avatarUrl}
+            onImageUpload={(url) => {
+              form.setValue("avatarUrl", url);
+              updateProfile({ avatarUrl: url });
+            }}
+          />
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="flex justify-center mb-6">
-              <AvatarUpload
-                currentImageUrl={profile.avatarUrl}
-                onImageUpload={(url) => {
-                  form.setValue('avatarUrl', url);
-                  updateProfile({ avatarUrl: url });
-                }}
-              />
-            </div>
-
             <FormField
               control={form.control}
               name="name"
