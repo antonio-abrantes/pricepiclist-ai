@@ -2,7 +2,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { menuItems } from "@/config/menu";
-import { Settings, User, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
 import { Label } from "../ui/label";
 
@@ -44,6 +45,12 @@ export function Sidebar({
                 </Link>
               );
             })}
+            <a href="https://github.com/antonio-abrantes/pricepiclist-ai" target="_blank" rel="noopener noreferrer">
+              <Button variant="ghost" className="justify-start gap-2 w-full">
+                <FaGithub className="h-5 w-5" />
+                <p>Star on GitHub</p>
+              </Button>
+            </a>
           </div>
         </nav>
 

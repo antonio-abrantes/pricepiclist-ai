@@ -7,7 +7,7 @@ interface Prompt {
 
 export const PROMPTS: Record<PromptType, Prompt> = {
   menu: {
-    text: "Localize a etiqueta ou cartaz de preço na imagem e identifique o nome e o preço do produto correspondente. NÃO INVENTE DADOS. Se houver múltiplos preços na mesma imagem, priorize o produto cujo preço estiver mais centralizado. NÃO INVENTE DADOS. retire caractes como pipes, barra, contra barra, retire \n, cifrão, para o preço, apenas o numero como float, retone apenas o JSON como o do exemplo: { name: string, price: string }   ATENÇÃO: NÃO INVENTE DADOS! NÃO INVENTE DADOS! Caso algum produto não tenha alguma dado, prencha a propriedade com uma string vazia. NÃO INVENTE DADOS, O price TEM QUE SER UM NUMBER VÁLIDO EM JAVASCRIPT. NAO COLOQUE DENTRO DE ARRAY, APENAS O JSON",
+    text: "Localize a etiqueta ou cartaz de preço na imagem e identifique o nome e o preço do produto correspondente. NÃO INVENTE DADOS. Se houver múltiplos preços na mesma imagem, priorize o produto cujo preço estiver mais centralizado. NÃO INVENTE DADOS. retire caractes como pipes, barra, contra barra, retire \n, cifrão, para o preço, apenas o numero como float, retone apenas o JSON como o do exemplo: { name: string, price: string } ATENÇÃO: NÃO INVENTE DADOS! NÃO INVENTE DADOS! Caso algum produto não tenha alguma dado, prencha a propriedade name com uma string vazia e caso seja o price preencha com o number 0. NÃO INVENTE DADOS, O price TEM QUE SER UM NUMBER VÁLIDO EM JAVASCRIPT. NAO COLOQUE DENTRO DE ARRAY, APENAS O JSON",
     description: "Product analysis",
   },
   menu_v2: {

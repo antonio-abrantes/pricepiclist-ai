@@ -21,6 +21,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useShoppingList } from "@/contexts/shopping-list-context";
 import { useEffect } from "react";
+import { HelpCircle } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -113,7 +120,19 @@ export function ListForm({
               name="maxValue"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Valor Máximo</FormLabel>
+                  <div className="flex items-center gap-2">
+                    <FormLabel>Valor Máximo</FormLabel>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-xs">
+                          <p>Define um limite de gastos para esta lista. O sistema alertará quando o total estiver próximo ou ultrapassar este valor.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                   <FormControl>
                     <Input type="number" step="0.01" {...field} />
                   </FormControl>

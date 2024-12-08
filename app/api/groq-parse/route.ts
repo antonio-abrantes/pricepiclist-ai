@@ -1,7 +1,10 @@
 /* eslint-disable */
 import { NextRequest, NextResponse } from "next/server";
 import { PROMPTS, PromptType } from "@/lib/prompts";
-import { extractJson } from "@/lib/utils";
+// import { extractJson } from "@/lib/utils";
+
+import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 
 interface Message {
   role: string;
@@ -22,6 +25,7 @@ interface GroqRequest {
   top_p: number;
   stream: boolean;
   stop: null;
+  response_format?: { type: "json_object", schema: any };
 }
 
 interface RequestBody {
@@ -32,25 +36,29 @@ interface RequestBody {
 }
 
 export const maxDuration = 60;
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  try {
-    const { imageUrl, analysisType, apiKey, providerApiKey } = await request.json() as RequestBody;
+  const Product = z.object({
+    name: z.string(),
+    price: z.number(),
+  });
 
-    if (apiKey !== process.env.GLOBAL_API_KEY) {
+  try {
+    const { imageUrl, analysisType, apiKey, providerApiKey } =
+      (await request.json()) as RequestBody;
+
+    if (!providerApiKey && (apiKey !== process.env.GLOBAL_API_KEY || !apiKey)) {
       return NextResponse.json(
         { error: "Unauthorized - Invalid API Key" },
         { status: 401 }
       );
     }
 
-    if (!providerApiKey) {
-      return NextResponse.json(
-        { error: "Unauthorized - Api Key not found" },
-        { status: 401 }
-      );
-    }
+    const groqApiKey = apiKey ? process.env.GROQ_API_KEY : providerApiKey;
+
+    // console.log("Groq API Key:", groqApiKey);
+    console.log("Groq API request");
 
     const prompt = PROMPTS[analysisType].text;
     console.log("Prompt:", prompt);
@@ -62,7 +70,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!providerApiKey) {
+    if (!groqApiKey) {
       console.error("GROQ_API_KEY not found");
       return NextResponse.json(
         { error: "API key not configured" },
@@ -94,6 +102,7 @@ export async function POST(request: NextRequest) {
       top_p: 1,
       stream: false,
       stop: null,
+      response_format: { type: "json_object", schema: zodToJsonSchema(Product) },
     };
 
     console.log("Sending request to Groq API...");
@@ -104,7 +113,7 @@ export async function POST(request: NextRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${providerApiKey}`,
+          Authorization: `Bearer ${groqApiKey}`,
         },
         body: JSON.stringify(groqPayload),
       }
@@ -128,21 +137,23 @@ export async function POST(request: NextRequest) {
 
     console.log("Items extracted:", data.choices[0].message.content);
 
-    const jsonObject = extractJson(data.choices[0].message.content);
+    // const jsonObject = extractJson(data.choices[0].message.content);
 
-    return NextResponse.json({ 
-      choices: [{ 
-        message: { 
-          content: JSON.stringify(jsonObject)
-        } 
-      }] 
+    return NextResponse.json({
+      choices: [
+        {
+          message: {
+            content: data.choices[0].message.content,
+          },
+        },
+      ],
     });
   } catch (error: any) {
     console.error("Full error:", error);
     return NextResponse.json(
-      { 
+      {
         error: error.message || "Failed to parse menu",
-        details: error.stack
+        details: error.stack,
       },
       { status: 500 }
     );

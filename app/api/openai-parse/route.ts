@@ -16,21 +16,19 @@ export async function POST(request: NextRequest) {
   try {
     const { imageUrl, analysisType, apiKey, providerApiKey } = await request.json() as RequestBody;
 
-    console.log( { imageUrl, analysisType, apiKey, openaiApiKey: providerApiKey });
+    // console.log( { imageUrl, analysisType, apiKey, openaiApiKey: providerApiKey });
 
-    if (apiKey !== process.env.GLOBAL_API_KEY) {
+    if (!providerApiKey && (apiKey !== process.env.GLOBAL_API_KEY || !apiKey)) {
       return NextResponse.json(
         { error: "Unauthorized - Invalid API Key" },
         { status: 401 }
       );
     }
 
-    if (!providerApiKey) {
-      return NextResponse.json(
-        { error: "Unauthorized - Api Key not found" },
-        { status: 401 }
-      );
-    }
+    const openaiApiKey = apiKey ? process.env.OPENAI_API_KEY : providerApiKey;
+
+    // console.log("OpenAI API Key:", openaiApiKey);
+    console.log("OpenAI API request");
 
     const prompt = PROMPTS[analysisType].text;
 
@@ -41,11 +39,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!openaiApiKey) {
+      console.error("OPENAI_API_KEY not found");
+      return NextResponse.json(
+        { error: "API key not configured" },
+        { status: 500 }
+      );
+    }
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${providerApiKey}`,
+        Authorization: `Bearer ${openaiApiKey}`,
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",

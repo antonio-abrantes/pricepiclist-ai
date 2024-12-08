@@ -18,8 +18,9 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const apiKey = formData.get("apiKey");
+    const providerApiKey = formData.get("providerApiKey");
 
-    if (apiKey !== process.env.GLOBAL_API_KEY) {
+    if (!providerApiKey && (apiKey !== process.env.GLOBAL_API_KEY || !apiKey)) {
       return NextResponse.json(
         { error: "Unauthorized - Invalid API Key" },
         { status: 401 }

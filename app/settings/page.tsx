@@ -7,8 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function SettingsPage() {
   // const { aiProvider, setAiProvider, apiKey, setApiKey } = useAISettings();
@@ -21,9 +27,9 @@ export default function SettingsPage() {
     setGroqApiKey,
     openaiApiKey,
     setOpenaiApiKey,
-    aiProvider, 
-    setAiProvider, 
-    apiKey, 
+    aiProvider,
+    setAiProvider,
+    apiKey,
     setApiKey
   } = useAIProvider();
 
@@ -109,7 +115,19 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="groqApiKey">Groq API Key</Label>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="groqApiKey">Groq API Key</Label>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        <p>Caso não tenha a API Key Global, crie sua API Key da Groq em: <a className="hover:underline font-bold font-purple-900" href="https://console.groq.com/keys" target="_blank" rel="noopener noreferrer">console.groq.com</a></p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
                 <div className="relative">
                   <Input
                     id="groqApiKey"
@@ -130,7 +148,19 @@ export default function SettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="openaiApiKey">OpenAI API Key</Label>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="openaiApiKey">OpenAI API Key</Label>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        <p>Caso não tenha a API Key Global, crie sua API Key da OpenAI em: <a className="hover:underline font-bold font-purple-900" href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">platform.openai.com</a></p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
                 <div className="relative">
                   <Input
                     id="openaiApiKey"

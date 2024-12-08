@@ -29,7 +29,7 @@ export function ListCard({ id, name, maxValue, createdAt, total, onEdit, onDelet
         <Card className="p-4 rounded-lg border bg-card hover:bg-accent transition-colors">
           <div className="flex items-center justify-between">
             <div className="max-w-[220px]">
-              <h3 className="font-semibold text-card-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">{name} texto grande para testar o limite da linha</h3>
+              <h3 className="font-semibold text-card-foreground truncate overflow-hidden text-ellipsis whitespace-nowrap">{name}</h3>
               <p className="text-sm text-muted-foreground mt-[3px]">
                 {formatCurrency(maxValue)}
               </p>

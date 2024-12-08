@@ -9,6 +9,7 @@ import { compressAndConvertToJpeg } from "@/lib/image-utils"
 import { toast } from 'sonner'
 import { useAIProvider } from '@/contexts/ai-provider-context'
 import { ApiKeyWarningModal } from './api-key-warning-modal'
+import { HelpModal } from './help-modal'
 const MAX_IMAGE_SIZE_MB = 1;
 
 export function ListActions() {
@@ -57,7 +58,12 @@ export function ListActions() {
 
   const handleAnalyze = async () => {
 
-    if (!globalApiKey) {
+    if (!groqApiKey && provider === 'groq' && !globalApiKey) {
+      setIsApiKeyWarningOpen(true);
+      return;
+    }
+
+    if (!openaiApiKey && provider === 'openai' && !globalApiKey) {
       setIsApiKeyWarningOpen(true);
       return;
     }
@@ -98,6 +104,7 @@ export function ListActions() {
           const formData = new FormData();
           formData.append("file", fileToUpload);
           formData.append("apiKey", globalApiKey);
+          formData.append("providerApiKey", groqApiKey || openaiApiKey);
 
           const uploadResponse = await fetch('/api/s3-upload-minio', {
             method: "POST",
@@ -222,6 +229,8 @@ export function ListActions() {
         <Upload className="mr-2 h-4 w-4" />
         Gravar e Analisar
       </Button>
+
+      <HelpModal />
 
       <ProductForm
         isOpen={isFormOpen}
