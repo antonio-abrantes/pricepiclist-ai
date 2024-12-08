@@ -23,10 +23,6 @@ export function Sidebar({
     onClose();
   };
 
-  useEffect(() => {
-    console.log(profile);
-  }, [profile]);
-
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent side="left" className="flex flex-col">

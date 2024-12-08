@@ -22,11 +22,22 @@ export const metadata: Metadata = {
   metadataBase: new URL(url),
   title,
   description,
+  manifest: '/manifest.json',
   icons: {
-    icon: "/icon.png",
-    shortcut: "/favicon.ico",
+    icon: "/icon-512x512.png",
+    shortcut: "/icon-192x192.png",
     apple: "/apple-icon.png",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: title,
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  themeColor: '#000000',
+  viewport: 'minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover',
   openGraph: {
     images: [ogimage],
     title,
